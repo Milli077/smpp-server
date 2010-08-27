@@ -1,0 +1,122 @@
+02:06:14    main: SMPPTest.SMPPTest.bind() entered
+02:06:49       main: TCPIPConnection.open entered
+02:06:50       main: TCPIPConnection.open opened client tcp/ip connection to 202.157.161.199 on port 10035 (7)
+02:06:50       main: TCPIPConnection.open exited
+02:06:50       main: Session.send(Request) entered
+02:06:50       main: Session.send(Request) Sending request (bindreq: (pdu: 0 9 0 [1]) neustar neu4str Logica 52 (addrrang: 1 1 11*) )  (4)
+02:06:50          main: Transmitter.send entered
+02:06:50          main: Transmitter.send going to send pdu's data over connection (7)
+02:06:50          main: Transmitter.send PDU.getData() build up data 0000002e0000000900000000000000016e657573746172006e657534737472004c6f676963610034010131312a00 (5)
+02:06:50             main: TCPIPConnection.send entered
+02:06:50             main: TCPIPConnection.send sent 46 bytes to 202.157.161.199 on port 10035 (7)
+02:06:50             main: TCPIPConnection.send exited
+02:06:50          main: Transmitter.send successfully sent pdu's data over connection (7)
+02:06:50          main: Transmitter.send exited
+02:06:50       main: Session.send(Request) Going to receive response. Expecting (bindresp: (pdu: 0 80000009 0 1) )  (4)
+02:06:50       main: Session.send(Request) receivePDU: Going to receive response. (1)
+02:06:50       main: Session.send(Request) Is transmitter only => trying to receive from connection. (1)
+02:06:50       main: Session.send(Request) ReceiverBase.receivePDUFromConnection start (3)
+02:06:50          main: TCPIPConnection.receive entered
+02:06:50          main: TCPIPConnection.receive going to read from socket (8)
+02:06:50          main: TCPIPConnection.receive comms timeout=60000 receive timeout=20000 receive buffer size=4096 (8)
+02:06:50          main: TCPIPConnection.receive read 31 bytes from socket (8)
+02:06:50          main: TCPIPConnection.receive no more data remains in the socket (8)
+02:06:50          main: TCPIPConnection.receive totally read 31 bytes from socket (7)
+02:06:50          main: TCPIPConnection.receive exited
+02:06:50       main: Session.send(Request) trying to create pdu from unprocessed buffer (1)
+02:06:50       main: Session.send(Request) PDU.setData() parsing header 0000001f800000090000000000000001 (5)
+02:06:50       main: Session.send(Request) PDU.setData() parsing body 536d73632053696d756c61746f7200 (5)
+02:06:50       main: Session.send(Request) received complete pdu(bindresp: (pdu: 31 80000009 0 1) Smsc Simulator)  (1)
+02:06:50       main: Session.send(Request) there is 0 bytes left in unprocessed buffer (1)
+02:06:50       main: Session.send(Request) ReceiverBase.receivePDUFromConnection finished (3)
+02:06:50       main: Session.send(Request) Got pdu (bindresp: (pdu: 31 80000009 0 1) Smsc Simulator)  (1)
+02:06:50       main: Session.send(Request) Got response(?) pdu (bindresp: (pdu: 31 80000009 0 1) Smsc Simulator)  (4)
+02:06:50       main: Session.send(Request) checking response if it's what we expected. (4)
+02:06:50       main: Session.send(Request) exited
+02:06:50    main: SMPPTest.SMPPTest.bind() Receiver starting (1)
+02:06:50       main: Receiver.start() entered
+02:06:50    Receiver-1: Receiver.run() entered
+02:06:50    Receiver-1: Receiver.run() Receiver.receiveAsync() going to receive pdu. (3)
+02:06:50       main: Receiver.start() exited
+02:06:50    Receiver-1: Receiver.run() ReceiverBase.receivePDUFromConnection start (3)
+02:06:50    main: SMPPTest.SMPPTest.bind() Receiver started (1)
+02:06:50       Receiver-1: TCPIPConnection.receive entered
+02:06:50       Receiver-1: TCPIPConnection.receive going to read from socket (8)
+02:06:50       Receiver-1: TCPIPConnection.receive comms timeout=60000 receive timeout=20000 receive buffer size=4096 (8)
+02:06:50    main: SMPPTest.SMPPTest.bind() exited
+02:06:55       main: SMPPTest.SMPPTest.submit() entered
+02:07:39          main: Session.send(Request) entered
+02:07:39          main: Session.send(Request) Sending request (submit: (pdu: 0 4 0 2) (addr: 1 1 3538612345678)  (addr: 1 1 62811832921)  (sm: enc: ASCII msg: ??)  (opt: ) )  (4)
+02:07:39             main: Transmitter.send entered
+02:07:39             main: Transmitter.send going to send pdu's data over connection (7)
+02:07:39             main: Transmitter.send PDU.getData() build up data 0000003b00000004000000000000000200010133353338363132333435363738000101363238313138333239323100000000000000000800023f3f (5)
+02:07:39                main: TCPIPConnection.send entered
+02:07:39                main: TCPIPConnection.send sent 59 bytes to 202.157.161.199 on port 10035 (7)
+02:07:39                main: TCPIPConnection.send exited
+02:07:39             main: Transmitter.send successfully sent pdu's data over connection (7)
+02:07:39             main: Transmitter.send exited
+02:07:39          main: Session.send(Request) exited
+02:07:39       main: SMPPTest.SMPPTest.submit() exited
+02:07:39       Receiver-1: TCPIPConnection.receive read 25 bytes from socket (8)
+02:07:39       Receiver-1: TCPIPConnection.receive no more data remains in the socket (8)
+02:07:39       Receiver-1: TCPIPConnection.receive totally read 25 bytes from socket (7)
+02:07:39       Receiver-1: TCPIPConnection.receive exited
+02:07:39    Receiver-1: Receiver.run() trying to create pdu from unprocessed buffer (1)
+02:07:39    Receiver-1: Receiver.run() PDU.setData() parsing header 00000019800000040000000000000002 (5)
+02:07:39    Receiver-1: Receiver.run() PDU.setData() parsing body 536d73633230303700 (5)
+02:07:39    Receiver-1: Receiver.run() received complete pdu(submit_resp: (pdu: 25 80000004 0 2) Smsc2007 )  (1)
+02:07:39    Receiver-1: Receiver.run() there is 0 bytes left in unprocessed buffer (1)
+02:07:39    Receiver-1: Receiver.run() ReceiverBase.receivePDUFromConnection finished (3)
+02:07:39    Receiver-1: Receiver.run() Receiver.receiveAsync(): PDU received, processing (submit_resp: (pdu: 25 80000004 0 2) Smsc2007 )  (1)
+02:07:39    Receiver-1: Receiver.run() receiver passing pdu to ServerPDUEventListener (1)
+02:07:39    Receiver-1: Receiver.run() Receiver.receiveAsync() going to receive pdu. (3)
+02:07:39    Receiver-1: Receiver.run() ReceiverBase.receivePDUFromConnection start (3)
+02:07:39       Receiver-1: TCPIPConnection.receive entered
+02:07:39       Receiver-1: TCPIPConnection.receive going to read from socket (8)
+02:07:39       Receiver-1: TCPIPConnection.receive comms timeout=60000 receive timeout=20000 receive buffer size=4096 (8)
+02:07:46       main: SMPPTest.SMPPTest.exit() entered
+02:07:46          main: SMPPTest.SMPPTest.unbind() entered
+02:07:46             main: Session.send(Request) entered
+02:07:46             main: Session.send(Request) Sending request (unbind: (pdu: 0 6 0 3) )  (4)
+02:07:46                main: Transmitter.send entered
+02:07:46                main: Transmitter.send going to send pdu's data over connection (7)
+02:07:46                main: Transmitter.send PDU.getData() build up data 00000010000000060000000000000003 (5)
+02:07:46                   main: TCPIPConnection.send entered
+02:07:46                   main: TCPIPConnection.send sent 16 bytes to 202.157.161.199 on port 10035 (7)
+02:07:46                   main: TCPIPConnection.send exited
+02:07:46                main: Transmitter.send successfully sent pdu's data over connection (7)
+02:07:46                main: Transmitter.send exited
+02:07:46             main: Session.send(Request) exited
+02:07:46       Receiver-1: TCPIPConnection.receive read 16 bytes from socket (8)
+02:07:46       Receiver-1: TCPIPConnection.receive no more data remains in the socket (8)
+02:07:46       Receiver-1: TCPIPConnection.receive totally read 16 bytes from socket (7)
+02:07:46       Receiver-1: TCPIPConnection.receive exited
+02:07:46    Receiver-1: Receiver.run() trying to create pdu from unprocessed buffer (1)
+02:07:46    Receiver-1: Receiver.run() PDU.setData() parsing header 00000010800000060000000000000003 (5)
+02:07:46    Receiver-1: Receiver.run() PDU.setData() no data for body (5)
+02:07:46    Receiver-1: Receiver.run() received complete pdu(unbind_resp: (pdu: 16 80000006 0 3) )  (1)
+02:07:46    Receiver-1: Receiver.run() there is 0 bytes left in unprocessed buffer (1)
+02:07:46    Receiver-1: Receiver.run() ReceiverBase.receivePDUFromConnection finished (3)
+02:07:46    Receiver-1: Receiver.run() Receiver.receiveAsync(): PDU received, processing (unbind_resp: (pdu: 16 80000006 0 3) )  (1)
+02:07:46    Receiver-1: Receiver.run() receiver passing pdu to ServerPDUEventListener (1)
+02:07:46    Receiver-1: Receiver.run() checking response if it's what we expected. (4)
+02:07:46    Receiver-1: Receiver.run() Receiver.receiveAsync() going to receive pdu. (3)
+02:07:46          main: SMPPTest.SMPPTest.unbind() Receiver stoping (1)
+02:07:46             main: Receiver.stop() entered
+02:07:46    Receiver-1: Receiver.run() ReceiverBase.receivePDUFromConnection start (3)
+02:07:46       Receiver-1: TCPIPConnection.receive entered
+02:07:46       Receiver-1: TCPIPConnection.receive going to read from socket (8)
+02:07:46       Receiver-1: TCPIPConnection.receive comms timeout=60000 receive timeout=20000 receive buffer size=4096 (8)
+02:08:46       Receiver-1: TCPIPConnection.receive no more data remains in the socket (8)
+02:08:46       Receiver-1: TCPIPConnection.receive totally read 0 bytes from socket (7)
+02:08:46       Receiver-1: TCPIPConnection.receive exited
+02:08:46    Receiver-1: Receiver.run() no data received this time. (3)
+02:08:46    Receiver-1: Receiver.run() ReceiverBase.receivePDUFromConnection finished (3)
+02:08:46    Receiver-1: Receiver.run() exited
+02:08:46             main: Receiver.stop() exited
+02:08:46          main: SMPPTest.SMPPTest.unbind() Receiver stoped (1)
+02:08:46             main: TCPIPConnection.close entered
+02:08:46             main: TCPIPConnection.close closed client tcp/ip connection to 202.157.161.199 on port 10035 (7)
+02:08:46             main: TCPIPConnection.close exited
+02:08:46          main: SMPPTest.SMPPTest.unbind() exited
+02:08:46       main: SMPPTest.SMPPTest.exit() exited
