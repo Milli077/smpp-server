@@ -11,6 +11,7 @@
 package com.logica.smpp;
 
 import com.logica.smpp.util.*;
+import com.logica.smscsim.Simulator;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,6 +23,9 @@ import java.io.InterruptedIOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.lang.Integer;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementation of TCP/IP type of communication.
@@ -440,6 +444,22 @@ public class TCPIPConnection extends Connection
                          && (totalBytesRead < maxReceiveSize));
 
                 debug.write(DCOM,"totally read "+data.length()+" bytes from socket");
+
+                /*
+                String raw = (new String(data.getBuffer())).trim();
+                String d = raw.substring(0, 3);
+
+                if(d.equals("msg")) {
+                    System.out.println("List msg");
+                    socket.getOutputStream().write(Simulator.instance().krxmessageList().getBytes());
+                    //socket.close();
+                } else if(d.equals("cli")) {
+                    System.out.println("List client");
+                    socket.getOutputStream().write(Simulator.instance().krxlistClients().toString().getBytes());
+                    //socket.close();
+                }
+                 * 
+                 */
             } catch (IOException e) {
                 debug.write("IOException " + e);
                 event.write(e,"IOException receive via TCPIPConnection");

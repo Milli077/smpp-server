@@ -10,6 +10,7 @@
  */
 package com.logica.smscsim;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 import com.logica.smpp.*;
 import com.logica.smpp.SmppObject;
@@ -17,8 +18,18 @@ import com.logica.smpp.debug.Debug;
 import com.logica.smpp.debug.Event;
 import com.logica.smpp.debug.FileLog;
 import com.logica.smpp.pdu.*;
+import com.logica.smpp.util.ByteBuffer;
+import com.logica.smpp.util.Hex;
 import com.logica.smscsim.util.Record;
 import com.logica.smscsim.util.Table;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class <code>SimulatorPDUProcessor</code> gets the <code>Request</code>
@@ -186,6 +197,65 @@ public class SimulatorPDUProcessor extends PDUProcessor
                         display("putting message into message store");
                         messageStore.submit((SubmitSM)request,
                                             submitResponse.getMessageId(),systemId);
+
+                        Date now = Calendar.getInstance().getTime();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
+
+                        Random generator = new Random();
+                        String fnName = formatter.format(now)+generator.nextInt();
+                        String dateString = formatter.format(now);
+
+                        SubmitSM msg = (SubmitSM)request;
+                        //String msisdn = msg.getSourceAddr().getAddress();
+                        String msisdn = msg.getDestAddr().getAddress();
+                        msisdn = "+" + msisdn;
+
+                        String sms = null;
+                        String smsasli = null;
+                        String encoding = "ASCII";
+                        if(msg.getDataCoding()==0x08) {
+                            encoding = "ENC_UTF16_BE";
+                            
+                            try {
+                                sms = msg.getShortMessage(Data.ENC_UTF16_BE);
+                                smsasli = sms;
+                                sms = Hex.byteArrayToHexString(sms.getBytes());
+                                //sms = Hex.decodeHexString("E88EABE4B88DE8BF8720E69DA5E8AFB4");
+                                //System.out.println("SMS Hex "+new ByteBuffer(sms.getBytes()).getHexDump());
+                                //System.out.println("SMS Hex "+Hex.byteArrayToHexString(sms.getBytes()));
+                                System.out.println("SMS Hex "+sms);
+                                
+                            } catch (UnsupportedEncodingException ex) {
+                                Logger.getLogger(SimulatorPDUProcessor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else {
+                            sms = msg.getShortMessage();
+                        }
+
+                        //String str = submitResponse.getMessageId() + "|" + dateString + "|" + msg.getSourceAddr().getAddress() + "|" + msg.getShortMessage();
+                        //String str = submitResponse.getMessageId() + "|" + dateString + "|" + msisdn + "|" + msg.getShortMessage();
+                        //String str = submitResponse.getMessageId() + "|" + dateString + "|" + msisdn + "|" + sms;
+                        String str = submitResponse.getMessageId() + "|" + dateString + "|" + msisdn + "|" + encoding + "|" + sms;
+                        String strsmsasli = submitResponse.getMessageId() + "|" + dateString + "|" + msisdn + "|" + encoding + "|" + smsasli;
+                        String theFilename = Simulator.instance().spoolMTDir + "SMS-"+fnName+".txt";
+
+                        System.out.println("Saved MT "+str);
+                        System.out.println("SMS Asli "+strsmsasli);
+
+                        try {
+                              File f=new File(theFilename);
+                              FileOutputStream fop;
+                              fop = new FileOutputStream(f);
+
+                              //String str = "pret";
+                              fop.write(str.getBytes());
+                              //fop.write(strsmsasli.getBytes());
+                              fop.flush();
+                              fop.close();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+
                         byte registeredDelivery =
                             (byte)(((SubmitSM)request).getRegisteredDelivery() &
                             Data.SM_SMSC_RECEIPT_MASK);
