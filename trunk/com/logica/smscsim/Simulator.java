@@ -10,13 +10,16 @@
  */
 package com.logica.smscsim;
 
+import com.logica.smpp.Data;
 import java.io.*;
 import java.util.*;
 
 import com.logica.smpp.debug.*;
 import com.logica.smpp.SmppObject;
 import com.logica.smpp.pdu.DeliverSM;
+import com.logica.smpp.pdu.SubmitSM;
 import com.logica.smpp.pdu.WrongLengthOfStringException;
+import com.logica.smpp.util.Hex;
 import com.logica.smscsim.SimulatorPDUProcessor;
 import com.logica.smscsim.SimulatorPDUProcessorFactory;
 import com.logica.smscsim.util.BasicTableParser;
@@ -63,7 +66,13 @@ public class Simulator
     static final String copyright =
         "Copyright (c) 1996-2001 Logica Mobile Networks Limited\n"+
         "This product includes software developed by Logica by whom copyright\n"+
-        "and know-how are retained, all rights reserved.\n";
+        "and know-how are retained, all rights reserved.\n\n"+
+        "For zingmobile by Aldi (KoronX).\n";
+
+    public String spoolMODir = "/var/spool/zsmppmo/";
+    public String spoolMTDir = "/var/spool/zsmpp/";
+    //public String spoolMODir = "d:\\mo\\";
+    //public String spoolMTDir = "d:\\mt\\";
 
     static {
         System.out.println(copyright);
@@ -95,6 +104,11 @@ public class Simulator
 
     static BufferedReader keyboard =
         new BufferedReader(new InputStreamReader(System.in));
+    private static Simulator self;
+
+    static Simulator instance() {
+        return self;
+    }
 
     boolean keepRunning = true;
     private SMSCListener smscListener = null;
@@ -115,6 +129,7 @@ public class Simulator
      */
     public static void main(String args[]) throws IOException
     {
+        /*
         SmppObject.setDebug(debug);
         SmppObject.setEvent(event);
         debug.activate();
@@ -123,8 +138,14 @@ public class Simulator
         debug.deactivate(SmppObject.DPDUD);
         debug.deactivate(SmppObject.DCOMD);
         debug.deactivate(DSIMD2);
+         * 
+         */
         Simulator menu = new Simulator();
+        self = menu;
         menu.menu();
+
+        SpoolChecker sp = new SpoolChecker();
+        new Thread(sp).start();
     }
     
     /**
@@ -137,6 +158,8 @@ public class Simulator
     {
         debug.write("simulator started");
 
+        start();
+        /*
         keepRunning = true;
         String option = "1";
         int optionInt;
@@ -197,6 +220,8 @@ public class Simulator
 
         System.out.println("Exiting simulator.");
         debug.write("simulator exited.");
+         * 
+         */
     }
 
     /**
@@ -209,8 +234,9 @@ public class Simulator
     protected void start() throws IOException
     {
         if (smscListener == null) {
-            System.out.print("Enter port number> ");
-            int port = Integer.parseInt(keyboard.readLine());
+            //System.out.print("Enter port number> ");
+            //int port = Integer.parseInt(keyboard.readLine());
+            int port = 10035;
             System.out.print("Starting listener... ");
             smscListener = new SMSCListener(port,true);
             processors = new PDUProcessorGroup();
@@ -354,7 +380,107 @@ public class Simulator
             System.out.println("You must start listener first.");
         }
     }
-    
+
+    public String sendMessage(String toSMPP, String shortCode, String msisdn, String encoding, String msg) throws IOException
+    {
+        String ret = "No";
+        //String sourceAddress;
+        //String destAddress;
+        //String shortMessage;
+        //byte registeredDelivery;
+        System.out.println("Sending from "+shortCode+" to "+msisdn+" : "+msg);
+        if (smscListener != null) {
+            int procCount = processors.count();
+            if (procCount > 0) {
+                String client;
+                SimulatorPDUProcessor proc;
+                listClients();
+                if (procCount > 1) {
+                    //System.out.print("Type name of the destination> ");
+                    //client = keyboard.readLine();
+                    client = toSMPP;
+                } else {
+                    proc = (SimulatorPDUProcessor)processors.get(0);
+                    client = proc.getSystemId();
+                }
+
+                String pr = "";
+                int pro = 0;
+
+                for(int i=0; i<procCount; i++) {
+                    proc = (SimulatorPDUProcessor)processors.get(i);
+                    if(proc!=null) {
+                        if (proc.getSystemId().equals(client)) {
+                            if (proc.isActive()) {
+                                pr += i+",";
+                                pro++;
+                            } else {
+                                ret = "This session is inactive.";
+                            }
+                        } else {
+                            ret = "No session";
+                        }
+                    }
+                }
+                
+                if(pr.length()>0) {
+                    pr = pr.substring(0, pr.length()-1);
+                }
+
+                System.out.println("Active proc : "+pr);
+
+                String[] prx = pr.split(",");
+                int pick = 0;
+                if(prx.length>1) {
+                    Random random = new Random();
+                    pick = random.nextInt(prx.length);
+                    if(pick>0)
+                        pick--;
+                }
+                /*else {
+                    pick = Integer.parseInt(prx[0]);
+                }
+                 * 
+                 */
+                System.out.println("Sending to proc "+pick);
+
+                proc = (SimulatorPDUProcessor)processors.get(pick);
+
+                DeliverSM request = new DeliverSM();
+                try {
+                    request.setSourceAddr(msisdn);
+                    request.setDestAddr(shortCode);
+                    System.out.println("encoding "+encoding);
+                    if(!encoding.equalsIgnoreCase("ascii")) {
+                        System.out.println("Sending "+msg+" with ENC_UTF16_BE");
+                        request.setDataCoding((byte)0x08);
+                        msg = msg.replaceAll("%", "");
+                        request.setShortMessage(Hex.decodeHexString(msg),Data.ENC_UTF16_BE);
+                        System.out.println("Sending "+msg+" with ENC_UTF16_BEx");
+                    } else {
+                        request.setShortMessage(msg);
+                    }
+                    
+                    proc.serverRequest(request);
+                    ret = "Message sent to proc num "+pick;
+                    System.out.println("Message sent to proc "+pick);
+                } catch (WrongLengthOfStringException e) {
+                    System.out.println("Message sending failed");
+                    event.write(e, "");
+                    ret = "Message sending failed";
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                ret = "No client connected.";
+            }
+        } else {
+            ret = "You must start listener first.";
+        }
+        return ret;
+    }
+
     /**
      * Permits data to be sent to a specific client.
      * With the id of the client set by the user, the method <code>sendMessage</code> 
