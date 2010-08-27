@@ -64,6 +64,9 @@ public class ConfReader {
         while(dis.available() !=0 ) {
             temp = dis.readLine();
                 String removed = temp.replace(" ", "");
+                if(!removed.endsWith("/")) {
+                    removed = removed +"/";
+                }
                 if(!removed.startsWith("#")) {
                     if(removed.toLowerCase().contains("modir")){
                         this.spoolMODir = removed.split("=")[1];
