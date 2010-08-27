@@ -9,11 +9,11 @@ package com.logica.smscsim.util;
  *
  * @author przetyczce
  */
-public class MODirCounter {
+public class fileCounter {
     private int counter;
     private int lastCount;
 
-    public MODirCounter(int lastCount) {
+    public fileCounter(int lastCount) {
         this.lastCount = lastCount;
     }
 
