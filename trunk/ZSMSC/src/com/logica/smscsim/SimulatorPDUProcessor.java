@@ -10,7 +10,6 @@
  */
 package com.logica.smscsim;
 
-import java.io.UnsupportedEncodingException;
 import com.logica.smpp.*;
 import com.logica.smpp.SmppObject;
 import com.logica.smpp.debug.Debug;
@@ -22,10 +21,10 @@ import com.logica.smscsim.util.Record;
 import com.logica.smscsim.util.Table;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -197,39 +196,37 @@ public class SimulatorPDUProcessor extends PDUProcessor
                                             submitResponse.getMessageId(),systemId);
 
                         Date now = Calendar.getInstance().getTime();
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 
-                        Random generator = new Random();
-                        String fnName = formatter.format(now)+generator.nextInt();
+                        //this is the random generator that should be removed :P
+                        //Random generator = new Random();
+                        String fnName = formatter.format(now);
                         String dateString = formatter.format(now);
 
                         SubmitSM msg = (SubmitSM)request;
-                        //String msisdn = msg.getSourceAddr().getAddress();
-                        String msisdn = msg.getDestAddr().getAddress();
-                        msisdn = "+" + msisdn;
+                        String msisdn = msg.getSourceAddr().getAddress();
+                        //String msisdn = msg.getDestAddr().getAddress();
+                        //msisdn = "+" + msisdn;
 
-                        String source = msg.getSourceAddr().getAddress();
+                        String destination = msg.getDestAddr().getAddress();
+                        //source = "+" + source;
 
                         String sms = null;
                         String smsasli = null;
                         String encoding = "ASCII";
-                        if(msg.getDataCoding()==0x08) {
-                            encoding = "ENC_UTF16_BE";
-                            
+                        if(msg.getDataCoding()==0x06){
+                            encoding = "ENC_UTF8";
                             try {
-                                sms = msg.getShortMessage(Data.ENC_UTF16_BE);
+                                sms = msg.getShortMessage(Data.ENC_UTF8);
+                                //smsasli = msg.getShortMessage();
                                 smsasli = sms;
-                                sms = Hex.byteArrayToHexString(sms.getBytes());
-                                //sms = Hex.decodeHexString("E88EABE4B88DE8BF8720E69DA5E8AFB4");
-                                //System.out.println("SMS Hex "+new ByteBuffer(sms.getBytes()).getHexDump());
-                                //System.out.println("SMS Hex "+Hex.byteArrayToHexString(sms.getBytes()));
-                                System.out.println("SMS Hex "+sms);
-                                
+                                sms = Hex.decodeHexString(sms);
                             } catch (UnsupportedEncodingException ex) {
                                 Logger.getLogger(SimulatorPDUProcessor.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         } else {
                             sms = msg.getShortMessage();
+                            smsasli = msg.getShortMessage();
                         }
 
                         //String str = submitResponse.getMessageId() + "|" + dateString + "|" + msg.getSourceAddr().getAddress() + "|" + msg.getShortMessage();
@@ -238,14 +235,14 @@ public class SimulatorPDUProcessor extends PDUProcessor
                         //change the "|" with "\n"
                         
                         //String str = submitResponse.getMessageId() + "\n" + dateString + "\n" + msisdn + "\n" + encoding + "\n" + sms + "\n";
-                        String str = source + "\n" + msisdn + "\n" + encoding + "\n" + sms + "\n";
+                        String str = msisdn + "\n" + destination + "\n" + encoding + "\n" + sms + "\n" /*+ submitResponse.getMessageId()*/;
                         
                         //String strsmsasli = submitResponse.getMessageId() + "\n" + dateString + "\n" + msisdn + "\n" + encoding + "\n" + smsasli + "\n";
-                        String strsmsasli = source + "\n" + msisdn + "\n" + encoding + "\n" + sms + "\n";
+                        String strsmsasli = msisdn + "\n" + destination + "\n" + encoding + "\n" + smsasli + "\n";
 
                         //change the file name
                         //String theFilename = Simulator.instance().spoolMTDir + "SMS-"+fnName+".txt";
-                        String theFilename = Simulator.instance().spoolMTDir + msisdn.substring(5) + dateString + ".txt";
+                        String theFilename = Simulator.instance().spoolMTDir + msisdn + "-" + dateString + ".txt";
 
                         System.out.println("Saved MT "+str);
                         System.out.println("SMS Asli "+strsmsasli);

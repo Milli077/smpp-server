@@ -73,14 +73,14 @@ public class ConfReader {
                             removed = removed +"/";
                         }
                         this.spoolMODir = removed.split("=")[1];
-                        System.out.println(this.spoolMODir);
+                        //System.out.println(this.spoolMODir);
                     }
                     if(removed.toLowerCase().contains("mtdir")){
                         if(!removed.endsWith("/")) {
                             removed = removed +"/";
                         }
                         this.spoolMTDir = removed.split("=")[1];
-                        System.out.println(this.spoolMODir);
+                        //System.out.println(this.spoolMTDir);
                     }
                 }
             

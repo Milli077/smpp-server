@@ -5,6 +5,7 @@
 
 package com.logica.smscsim;
 
+import com.logica.smscsim.util.ConfReader;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -24,7 +25,25 @@ import java.util.logging.Logger;
  */
 public class SpoolChecker implements Runnable {
     private boolean isrun = true;
+    private String spoolMODir;
 
+
+    public SpoolChecker() {
+        ConfReader conf;
+        try {
+            conf = new ConfReader(Simulator.usersFileName);
+            //System.out.println(Simulator.usersFileName);
+            if(conf.getSpoolMODir() != null) {
+                this.spoolMODir = conf.getSpoolMODir();
+            }
+            
+        } catch (FileNotFoundException ex) {
+            this.spoolMODir = Simulator.instance().spoolMODir;
+        } catch (IOException ex) {
+            Logger.getLogger(SpoolChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
     private void copyfile(String srFile, String dtFile){
         try{
           File f1 = new File(srFile);
@@ -61,7 +80,8 @@ public class SpoolChecker implements Runnable {
                 Logger.getLogger(SpoolChecker.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            File folder = new File(Simulator.instance().spoolMODir);
+            File folder = new File(this.spoolMODir);
+            //System.out.println(this.spoolMODir);
             //File folder = new File("d:\\spool\\");
             File[] listOfFiles = folder.listFiles();
 
@@ -70,6 +90,7 @@ public class SpoolChecker implements Runnable {
                     //System.out.println("There's "+listOfFiles.length+" file(s)");
 
                     for (int i = 0; i < listOfFiles.length; i++) {
+                        String[] temp = new String[5];
                       if (listOfFiles[i].isFile()) {
                           System.out.println("Processing "+listOfFiles[i].getName());
                             File file = listOfFiles[i];
@@ -84,14 +105,18 @@ public class SpoolChecker implements Runnable {
                               // Here BufferedInputStream is added for fast reading.
                               bis = new BufferedInputStream(fis);
                               dis = new DataInputStream(bis);
-
+                              int counter = 0;
                               // dis.available() returns 0 if the file does not have more lines.
                               while (dis.available() != 0) {
 
                               // this statement reads the line from the file and print it to
                                 // the console.
                                 //System.out.println(dis.readLine());
-                                  content = dis.readLine();
+                                  if(counter < temp.length) {
+                                    temp[counter] = dis.readLine();
+                                    counter++;
+                                  }
+                                  //content = dis.readLine();
                               }
 
                               // dispose all the resources after using them.
@@ -105,15 +130,16 @@ public class SpoolChecker implements Runnable {
                               e.printStackTrace();
                             }
 
-                            if(content!=null) {
-                                System.out.println("Content : "+content);
-                                StringTokenizer st = new StringTokenizer(content, "|");
-                                String toSMPP = null;
-                                String shortCode = null;
-                                String msisdn = null;
-                                String encoding = null;
-                                String msg = null;
+                            if(temp[3] != null) {
+                                System.out.println("content : "+temp[3]);
+                                //StringTokenizer st = new StringTokenizer(content, "|");
+                                String toSMPP = "Smsc2001";
+                                String shortCode = temp[1];
+                                String msisdn = temp[0];
+                                String encoding = temp[2];
+                                String msg = temp[3];
 
+                                /*
                                 if(st.hasMoreTokens())
                                     toSMPP = st.nextToken();
 
@@ -128,6 +154,8 @@ public class SpoolChecker implements Runnable {
 
                                 if(st.hasMoreTokens())
                                     msg = st.nextToken();
+                                 *
+                                 */
 
                                 try {
                                     String ret = "";
