@@ -11,12 +11,8 @@
 package com.logica.smpp.pdu;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Vector;
-
 import com.logica.smpp.Data;
-import com.logica.smpp.SmppException;
 import com.logica.smpp.util.*;
-import com.logica.smpp.pdu.Request;
 import com.logica.smpp.pdu.tlv.*;
 
 /**
