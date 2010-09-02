@@ -1,1 +1,0 @@
-java -classpath lib\smpp.jar;.\smpptest.jar com.logica.smpp.test.SMPPTest
