@@ -229,16 +229,10 @@ public class SimulatorPDUProcessor extends PDUProcessor
                             smsasli = msg.getShortMessage();
                         }
 
-                        //String str = submitResponse.getMessageId() + "|" + dateString + "|" + msg.getSourceAddr().getAddress() + "|" + msg.getShortMessage();
-                        //String str = submitResponse.getMessageId() + "|" + dateString + "|" + msisdn + "|" + msg.getShortMessage();
-                        //String str = submitResponse.getMessageId() + "|" + dateString + "|" + msisdn + "|" + sms;
-                        //change the "|" with "\n"
-                        
-                        //String str = submitResponse.getMessageId() + "\n" + dateString + "\n" + msisdn + "\n" + encoding + "\n" + sms + "\n";
-                        String str = msisdn + "\n" + destination + "\n" + encoding + "\n" + sms + "\n" /*+ submitResponse.getMessageId()*/;
-                        
-                        //String strsmsasli = submitResponse.getMessageId() + "\n" + dateString + "\n" + msisdn + "\n" + encoding + "\n" + smsasli + "\n";
-                        String strsmsasli = msisdn + "\n" + destination + "\n" + encoding + "\n" + smsasli + "\n";
+                        long timestamp = System.currentTimeMillis()/1000;
+                        // Set String for realtime and debugging
+                        String str = msisdn + "\n" + destination + "\n" + timestamp + "\n" + encoding + "\n" + sms + "\n";
+                        String strsmsasli = msisdn + "\n" + destination + "\n"  + timestamp + "\n" + encoding + "\n" + smsasli + "\n";
 
                         //change the file name
                         //String theFilename = Simulator.instance().spoolMTDir + "SMS-"+fnName+".txt";
