@@ -88,7 +88,7 @@ public abstract class ByteData extends SmppObject
      * other formatter parameters.
      */
     static {
-        dateFormatter = new SimpleDateFormat(SMPP_TIME_DATE_FORMAT);
+        dateFormatter = new SimpleDateFormat("yyMMddHHmmss");
         dateFormatter.setLenient(false);
     }
 

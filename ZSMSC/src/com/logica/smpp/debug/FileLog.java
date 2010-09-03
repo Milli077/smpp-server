@@ -141,7 +141,7 @@ public class FileLog
 		Integer convert = new Integer(0);			
 
 		//for naming Validations, the array goes from 0-6 DAY_OF_WEEK is 1-7	
-		padString = convert.toString(fullCalendar.get(fullCalendar.HOUR));
+		padString = convert.toString(fullCalendar.get(fullCalendar.HOUR_OF_DAY));
 		retDate += zeroPad(2,padString);
 		padString = convert.toString(fullCalendar.get(fullCalendar.MINUTE));
 		retDate += ":"+zeroPad(2,padString);
