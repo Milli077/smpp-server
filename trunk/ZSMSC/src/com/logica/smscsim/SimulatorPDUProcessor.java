@@ -212,9 +212,9 @@ public class SimulatorPDUProcessor extends PDUProcessor
                         if(msg.getDataCoding()==0x08){
                             encoding = "UTF";
                             try {
-                                sms = msg.getShortMessage(Data.ENC_UTF8);
+                                sms = msg.getShortMessage(Data.ENC_UTF16_BE);
                                 smsasli = sms;
-                                sms = Hex.decodeHexString(sms);
+                                sms = Hex.byteArrayToHexString(sms.getBytes());
                             } catch (UnsupportedEncodingException ex) {
                                 Logger.getLogger(SimulatorPDUProcessor.class.getName()).log(Level.SEVERE, null, ex);
                             }
