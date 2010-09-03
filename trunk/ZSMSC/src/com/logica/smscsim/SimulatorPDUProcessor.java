@@ -209,7 +209,7 @@ public class SimulatorPDUProcessor extends PDUProcessor
                         String sms = null;
                         String smsasli = null;
                         String encoding = "ASCII";
-                        if(msg.getDataCoding()==0x06){
+                        if(msg.getDataCoding()==0x08){
                             encoding = "UTF";
                             try {
                                 sms = msg.getShortMessage(Data.ENC_UTF8);
@@ -223,13 +223,13 @@ public class SimulatorPDUProcessor extends PDUProcessor
                             smsasli = msg.getShortMessage();
                         }
 
-                        long timestamp = now.getTime();
+                        long timestamp = now.getTime()/1000;
                         // Set String for saving in mt dir and the real sms for debugging
                         String str = destination + "\n" + msisdn + "\n" + encoding + "\n" + sms + "\n";
                         String strsmsasli = destination + "\n" + msisdn + "\n"  + encoding + "\n" + smsasli + "\n";
                         
                         //the file name
-                        String theFilename = Simulator.instance().spoolMTDir + destination + "-" + timestamp + "-"+ microSecond + ".txt";
+                        String theFilename = Simulator.instance().spoolMTDir + msisdn + "-" + timestamp + "-"+ microSecond + ".txt";
                         
                         System.out.println("Saved MT \n"+str);
                         System.out.println("SMS Asli "+strsmsasli);
