@@ -138,6 +138,8 @@ public class Simulator
         debug.deactivate(DSIMD2);
          * 
          */
+        debug.activate();
+        event.activate();
 
 
         Simulator menu = new Simulator();
@@ -459,11 +461,11 @@ public class Simulator
                     request.setDestAddr(shortCode);
                     System.out.println("encoding "+encoding);
                     if(!encoding.equalsIgnoreCase("ascii")) {
-                        System.out.println("Sending "+msg+" with ENC_UTF16_BE");
-                        request.setDataCoding((byte)0x08);
-                        msg = msg.replaceAll("%", "");
-                        request.setShortMessage(Hex.decodeHexString(msg),Data.ENC_UTF16_BE);
-                        System.out.println("Sending "+msg+" with ENC_UTF16_BEx");
+                        System.out.println("Sending "+msg+" with ENC_UTF8");
+                        request.setDataCoding((byte)0x06);
+                        //msg = msg.replaceAll("%", "");
+                        request.setShortMessage(Hex.decodeHexString(msg),Data.ENC_UTF8);
+                        System.out.println("Sending "+msg+" with ENC_UTF8");
                     } else {
                         request.setShortMessage(msg);
                     }

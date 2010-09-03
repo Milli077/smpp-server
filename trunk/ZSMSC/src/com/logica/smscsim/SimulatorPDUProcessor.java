@@ -196,29 +196,23 @@ public class SimulatorPDUProcessor extends PDUProcessor
                                             submitResponse.getMessageId(),systemId);
 
                         Date now = Calendar.getInstance().getTime();
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss-SSS");
 
-                        //this is the random generator that should be removed :P
-                        //Random generator = new Random();
-                        String fnName = formatter.format(now);
-                        String dateString = formatter.format(now);
+                        String dateString = formatter.format(now).split("-")[0];
+                        String microSecond = formatter.format(now).split("-")[1];
 
                         SubmitSM msg = (SubmitSM)request;
+                        //Source and destination number
                         String msisdn = msg.getSourceAddr().getAddress();
-                        //String msisdn = msg.getDestAddr().getAddress();
-                        //msisdn = "+" + msisdn;
-
                         String destination = msg.getDestAddr().getAddress();
-                        //source = "+" + source;
 
                         String sms = null;
                         String smsasli = null;
                         String encoding = "ASCII";
                         if(msg.getDataCoding()==0x06){
-                            encoding = "ENC_UTF8";
+                            encoding = "UTF";
                             try {
                                 sms = msg.getShortMessage(Data.ENC_UTF8);
-                                //smsasli = msg.getShortMessage();
                                 smsasli = sms;
                                 sms = Hex.decodeHexString(sms);
                             } catch (UnsupportedEncodingException ex) {
@@ -229,30 +223,27 @@ public class SimulatorPDUProcessor extends PDUProcessor
                             smsasli = msg.getShortMessage();
                         }
 
-                        long timestamp = System.currentTimeMillis()/1000;
-                        // Set String for realtime and debugging
-                        String str = msisdn + "\n" + destination + "\n" + timestamp + "\n" + encoding + "\n" + sms + "\n";
-                        String strsmsasli = msisdn + "\n" + destination + "\n"  + timestamp + "\n" + encoding + "\n" + smsasli + "\n";
-
-                        //change the file name
-                        //String theFilename = Simulator.instance().spoolMTDir + "SMS-"+fnName+".txt";
-                        String theFilename = Simulator.instance().spoolMTDir + msisdn + "-" + dateString + ".txt";
-
-                        System.out.println("Saved MT "+str);
+                        long timestamp = now.getTime();
+                        // Set String for saving in mt dir and the real sms for debugging
+                        String str = destination + "\n" + msisdn + "\n" + encoding + "\n" + sms + "\n";
+                        String strsmsasli = destination + "\n" + msisdn + "\n"  + encoding + "\n" + smsasli + "\n";
+                        
+                        //the file name
+                        String theFilename = Simulator.instance().spoolMTDir + destination + "-" + timestamp + "-"+ microSecond + ".txt";
+                        
+                        System.out.println("Saved MT \n"+str);
                         System.out.println("SMS Asli "+strsmsasli);
 
                         try {
+                            //write the file
                               File f=new File(theFilename);
                               FileOutputStream fop;
                               fop = new FileOutputStream(f);
-
-                              //String str = "pret";
                               fop.write(str.getBytes());
-                              //fop.write(strsmsasli.getBytes());
                               fop.flush();
                               fop.close();
                         } catch (Exception ex) {
-                            ex.printStackTrace();
+                            System.out.println("error: "+ex);
                         }
 
                         byte registeredDelivery =
