@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,8 +80,7 @@ public class SpoolChecker implements Runnable {
             }
 
             File folder = new File(this.spoolMODir);
-            //System.out.println(this.spoolMODir);
-            //File folder = new File("d:\\spool\\");
+
             File[] listOfFiles = folder.listFiles();
 
             try {
@@ -134,28 +132,10 @@ public class SpoolChecker implements Runnable {
                                 System.out.println("content : "+temp[3]);
                                 //StringTokenizer st = new StringTokenizer(content, "|");
                                 String toSMPP = "Smsc2001";
-                                String shortCode = temp[1];
-                                String msisdn = temp[0];
+                                String shortCode = temp[0];
+                                String msisdn = temp[1];
                                 String encoding = temp[2];
                                 String msg = temp[3];
-
-                                /*
-                                if(st.hasMoreTokens())
-                                    toSMPP = st.nextToken();
-
-                                if(st.hasMoreTokens())
-                                    shortCode = st.nextToken();
-
-                                if(st.hasMoreTokens())
-                                    msisdn = st.nextToken();
-
-                                if(st.hasMoreTokens())
-                                    encoding = st.nextToken();
-
-                                if(st.hasMoreTokens())
-                                    msg = st.nextToken();
-                                 *
-                                 */
 
                                 try {
                                     String ret = "";
