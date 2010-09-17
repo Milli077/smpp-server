@@ -44,6 +44,11 @@ public class SpoolChecker implements Runnable {
 
     }
     private void copyfile(String srFile, String dtFile){
+        File dir = new File(Simulator.instance().spoolMODir +"failed");
+        if(!dir.exists()){
+              dir.mkdir();
+        }
+
         try{
           File f1 = new File(srFile);
           File f2 = new File(dtFile);
@@ -146,9 +151,9 @@ public class SpoolChecker implements Runnable {
                                         System.out.println("Send message : "+ret);
                                     }
 
-                                    if(ret.startsWith("Message sent"))
+                                    if(ret.startsWith("Message sent")){
                                         listOfFiles[i].delete();
-                                    else if(ret.startsWith("Message sending failed")) {
+                                    } else if(ret.startsWith("Message sending failed")) {
                                         copyfile(Simulator.instance().spoolMODir + listOfFiles[i].getName() , Simulator.instance().spoolMODir + "failed/" + listOfFiles[i].getName());
                                         listOfFiles[i].delete();
                                     }
