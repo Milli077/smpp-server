@@ -21,6 +21,7 @@ public class ConfReader {
     private String spoolMODir;
     private String spoolMTDir;
     private String fileName;
+    private String port;
 
     public ConfReader(String fileName) throws FileNotFoundException, IOException {
         //check for config file and get the MODir and MTDir
@@ -55,6 +56,9 @@ public class ConfReader {
         return this.spoolMTDir;
     }
 
+    public String getPort() {
+        return this.port;
+    }
     private void readConfig() throws FileNotFoundException, IOException {
         String temp;
         File file = new File(this.fileName);
@@ -73,14 +77,15 @@ public class ConfReader {
                             removed = removed +"/";
                         }
                         this.spoolMODir = removed.split("=")[1];
-                        //System.out.println(this.spoolMODir);
                     }
                     if(removed.toLowerCase().contains("mtdir")){
                         if(!removed.endsWith("/")) {
                             removed = removed +"/";
                         }
                         this.spoolMTDir = removed.split("=")[1];
-                        //System.out.println(this.spoolMTDir);
+                    }
+                    if(removed.toLowerCase().contains("port")) {
+                        this.port = removed.split("=")[1];
                     }
                 }
             

@@ -31,7 +31,7 @@ package com.logica.smpp;
 public class Data
 {
     public static final int SM_CONNID_LEN        = 16;
-    public static final int SM_MSG_LEN           = 254;
+    public static final int SM_MSG_LEN           = 480;
     public static final int SM_SYSID_LEN         = 16;
     public static final int SM_MSGID_LEN         = 64;
     public static final int SM_PASS_LEN          = 9;
