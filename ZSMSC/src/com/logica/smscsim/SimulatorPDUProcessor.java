@@ -211,7 +211,6 @@ public class SimulatorPDUProcessor extends PDUProcessor
                         String encoding = "ASCII";
                         if(msg.getDataCoding()==0x08){
                             encoding = "UTF";
-                            System.out.println("Encoding "+encoding);
                             try {
                                 sms = msg.getShortMessage(Data.ENC_UTF16_BE);
                                 smsasli = sms;
@@ -220,7 +219,6 @@ public class SimulatorPDUProcessor extends PDUProcessor
                                 Logger.getLogger(SimulatorPDUProcessor.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         } else {
-                            System.out.println("Encoding "+encoding);
                             sms = msg.getShortMessage();
                             smsasli = msg.getShortMessage();
                         }
@@ -233,6 +231,7 @@ public class SimulatorPDUProcessor extends PDUProcessor
                         String theFilename = Simulator.instance().spoolMTDir + msisdn + "-" + timestamp + "-"+ microSecond + ".txt";
                         
                         System.out.println("MO From "+destination+" to "+msisdn+": "+sms);
+                        System.out.println("Encoding "+encoding);
                         //System.out.println("SMS Asli "+strsmsasli);
 
                         try {
