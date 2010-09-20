@@ -48,7 +48,7 @@ public class DeliverSM extends Request
     private byte dataCoding                 = Data.DFLT_DATA_CODING;
     private byte smDefaultMsgId             = Data.DFLT_DFLTMSGID; // not used
     private short smLength                  = Data.DFLT_MSG_LEN;
-    private ShortMessage shortMessage       = new ShortMessage(1,Data.SM_MSG_LEN);
+    private ShortMessage shortMessage       = new ShortMessage(Data.SM_MSG_LEN);
 
     // optional parameters
     private TLVShort  userMessageReference  = new TLVShort(Data.OPT_PAR_USER_MSG_REF);
