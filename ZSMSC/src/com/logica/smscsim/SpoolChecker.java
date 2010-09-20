@@ -93,7 +93,7 @@ public class SpoolChecker implements Runnable {
                     //System.out.println("There's "+listOfFiles.length+" file(s)");
 
                     for (int i = 0; i < listOfFiles.length; i++) {
-                        String[] temp = new String[5];
+                        String[] temp = new String[7];
                       if (listOfFiles[i].isFile()) {
                           System.out.println("Processing "+listOfFiles[i].getName());
                             File file = listOfFiles[i];
@@ -114,12 +114,12 @@ public class SpoolChecker implements Runnable {
 
                               // this statement reads the line from the file and print it to
                                 // the console.
-                                //System.out.println(dis.readLine());
-                                  if(counter < temp.length) {
-                                    temp[counter] = dis.readLine();
-                                    counter++;
+                                content = dis.readLine();
+                                if(counter < temp.length) {
+                                    temp[counter] = content;
                                   }
-                                  //content = dis.readLine();
+                                
+                                counter++;
                               }
 
                               // dispose all the resources after using them.
@@ -133,8 +133,8 @@ public class SpoolChecker implements Runnable {
                               e.printStackTrace();
                             }
 
-                            if(temp[3] != null) {
-                                System.out.println("content : "+temp[3]);
+                            if(temp[6] != null) {
+                                //System.out.println("content : "+temp[6]);
                                 //StringTokenizer st = new StringTokenizer(content, "|");
                                 String toSMPP = "Smsc2001";
                                 String shortCode = temp[0];
@@ -146,7 +146,7 @@ public class SpoolChecker implements Runnable {
                                     String ret = "";
                                     if(toSMPP!=null && msg!=null && shortCode!=null && msisdn!=null) {
                                         msisdn = msisdn.replaceAll("\\+", "");
-                                        System.out.println("Send message from "+shortCode);
+                                        System.out.println("MO from "+shortCode+" to "+msisdn+" : "+msg);
                                         ret = Simulator.instance().sendMessage(toSMPP, shortCode, msisdn, encoding, msg);
                                         System.out.println("Send message : "+ret);
                                     }
@@ -163,6 +163,9 @@ public class SpoolChecker implements Runnable {
                                 } catch(Exception ex) {
                                     ex.printStackTrace();
                                 }
+                            } else {
+                                copyfile(Simulator.instance().spoolMODir + listOfFiles[i].getName() , Simulator.instance().spoolMODir + "failed/" + listOfFiles[i].getName());
+                                listOfFiles[i].delete();
                             }
                       }
                     }

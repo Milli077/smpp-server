@@ -211,6 +211,7 @@ public class SimulatorPDUProcessor extends PDUProcessor
                         String encoding = "ASCII";
                         if(msg.getDataCoding()==0x08){
                             encoding = "UTF";
+                            System.out.println("Encoding "+encoding);
                             try {
                                 sms = msg.getShortMessage(Data.ENC_UTF16_BE);
                                 smsasli = sms;
@@ -219,13 +220,14 @@ public class SimulatorPDUProcessor extends PDUProcessor
                                 Logger.getLogger(SimulatorPDUProcessor.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         } else {
+                            System.out.println("Encoding "+encoding);
                             sms = msg.getShortMessage();
                             smsasli = msg.getShortMessage();
                         }
 
                         long timestamp = now.getTime()/1000;
                         // Set String for saving in mt dir and the real sms for debugging
-                        String str = destination + "\n" + msisdn + "\n\n\n\n" + encoding + "\n" + sms + "\n";
+                        String str = destination + "\n" + msisdn + "\n" + "\n" + "\n" + "\n" + encoding + "\n" + sms + "\n";
                         
                         //the file name
                         String theFilename = Simulator.instance().spoolMTDir + msisdn + "-" + timestamp + "-"+ microSecond + ".txt";

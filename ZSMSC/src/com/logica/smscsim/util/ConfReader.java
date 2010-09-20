@@ -85,6 +85,9 @@ public class ConfReader {
                         this.spoolMTDir = removed.split("=")[1];
                     }
                     if(removed.toLowerCase().contains("port")) {
+                        if(removed.endsWith("/")){
+                            removed = removed.replace("/", "");
+                        }
                         this.port = removed.split("=")[1];
                     }
                 }

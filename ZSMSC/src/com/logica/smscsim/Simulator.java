@@ -314,11 +314,11 @@ public class Simulator
                     SimulatorPDUProcessor proc;
                     for(int i=0; i<procCount; i++) {
                         proc = (SimulatorPDUProcessor)processors.get(i);
-                        System.out.print(proc.getSystemId());
+                        //System.out.print(proc.getSystemId());
                         if (!proc.isActive()) {
                             System.out.println(" (inactive)");
                         } else {
-                            System.out.println();
+                            //System.out.println();
                         }
                     }
                 } else {
@@ -337,7 +337,7 @@ public class Simulator
         //String destAddress;
         //String shortMessage;
         //byte registeredDelivery;
-        System.out.println("Sending from "+shortCode+" to "+msisdn+" : "+msg);
+        //System.out.println("Sending from "+shortCode+" to "+msisdn+" : "+msg);
         if (smscListener != null) {
             int procCount = processors.count();
             if (procCount > 0) {
@@ -376,7 +376,7 @@ public class Simulator
                     pr = pr.substring(0, pr.length()-1);
                 }
 
-                System.out.println("Active proc : "+pr);
+                //System.out.println("Active proc : "+pr);
 
                 String[] prx = pr.split(",");
                 int pick = 0;
@@ -391,7 +391,7 @@ public class Simulator
                 }
                  * 
                  */
-                System.out.println("Sending to proc "+pick);
+                System.out.println("Sending to proc :"+pick);
 
                 proc = (SimulatorPDUProcessor)processors.get(pick);
 
@@ -401,11 +401,11 @@ public class Simulator
                     request.setDestAddr(shortCode);
                     System.out.println("encoding "+encoding);
                     if(!encoding.equalsIgnoreCase("ascii")) {
-                        System.out.println("Sending "+msg+" with ENC_UTF16_BE");
+                        //System.out.println("Sending "+msg+" with ENC_UTF16_BE");
                         request.setDataCoding((byte)0x08);
                         msg = msg.replaceAll("%", "");
                         request.setShortMessage(Hex.decodeHexString(msg),Data.ENC_UTF16_BE);
-                        System.out.println("Sending "+msg+" with ENC_UTF16_BEx");
+                        //System.out.println("Sending "+msg+" with ENC_UTF16_BEx");
                     } else {
                         request.setShortMessage(msg);
                     }
