@@ -225,14 +225,13 @@ public class SimulatorPDUProcessor extends PDUProcessor
 
                         long timestamp = now.getTime()/1000;
                         // Set String for saving in mt dir and the real sms for debugging
-                        String str = destination + "\n" + msisdn + "\n" + encoding + "\n" + sms + "\n";
-                        String strsmsasli = destination + "\n" + msisdn + "\n"  + encoding + "\n" + smsasli + "\n";
+                        String str = destination + "\n" + msisdn + "\n\n\n\n" + encoding + "\n" + sms + "\n";
                         
                         //the file name
                         String theFilename = Simulator.instance().spoolMTDir + msisdn + "-" + timestamp + "-"+ microSecond + ".txt";
                         
-                        System.out.println("Saved MT \n"+str);
-                        System.out.println("SMS Asli "+strsmsasli);
+                        System.out.println("MO From "+destination+" to "+msisdn+": "+sms);
+                        //System.out.println("SMS Asli "+strsmsasli);
 
                         try {
                             //write the file

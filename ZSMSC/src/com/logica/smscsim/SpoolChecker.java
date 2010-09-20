@@ -139,14 +139,14 @@ public class SpoolChecker implements Runnable {
                                 String toSMPP = "Smsc2001";
                                 String shortCode = temp[0];
                                 String msisdn = temp[1];
-                                String encoding = temp[2];
-                                String msg = temp[3];
+                                String encoding = temp[5];
+                                String msg = temp[6];
 
                                 try {
                                     String ret = "";
                                     if(toSMPP!=null && msg!=null && shortCode!=null && msisdn!=null) {
                                         msisdn = msisdn.replaceAll("\\+", "");
-                                        System.out.println("Send message from "+msisdn);
+                                        System.out.println("Send message from "+shortCode);
                                         ret = Simulator.instance().sendMessage(toSMPP, shortCode, msisdn, encoding, msg);
                                         System.out.println("Send message : "+ret);
                                     }
