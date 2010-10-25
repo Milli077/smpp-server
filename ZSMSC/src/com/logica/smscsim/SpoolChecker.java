@@ -136,7 +136,7 @@ public class SpoolChecker implements Runnable {
                             if(temp[6] != null) {
                                 //System.out.println("content : "+temp[6]);
                                 //StringTokenizer st = new StringTokenizer(content, "|");
-                                String toSMPP = "Smsc2001";
+                                String toSMPP = "tristar";
                                 String shortCode = temp[0];
                                 String msisdn = temp[1];
                                 String encoding = temp[5];

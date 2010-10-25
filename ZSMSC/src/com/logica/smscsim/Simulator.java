@@ -64,8 +64,7 @@ public class Simulator
         "Copyright (c) 1996-2001 Logica Mobile Networks Limited\n"+
         "This product includes software developed by Logica by whom copyright\n"+
         "and know-how are retained, all rights reserved.\n\n"+
-        "For zingmobile by Aldi (KoronX).\n" +
-        "updated by przetyczce ;))\n";
+        "ZingMobile change";
 
     public String spoolMODir = "/var/spool/zsmppmo/";
     public String spoolMTDir = "/var/spool/zsmpp/";
@@ -333,11 +332,6 @@ public class Simulator
     public String sendMessage(String toSMPP, String shortCode, String msisdn, String encoding, String msg) throws IOException
     {
         String ret = "No";
-        //String sourceAddress;
-        //String destAddress;
-        //String shortMessage;
-        //byte registeredDelivery;
-        //System.out.println("Sending from "+shortCode+" to "+msisdn+" : "+msg);
         if (smscListener != null) {
             int procCount = processors.count();
             if (procCount > 0) {
@@ -345,8 +339,6 @@ public class Simulator
                 SimulatorPDUProcessor proc;
                 listClients();
                 if (procCount > 1) {
-                    //System.out.print("Type name of the destination> ");
-                    //client = keyboard.readLine();
                     client = toSMPP;
                 } else {
                     proc = (SimulatorPDUProcessor)processors.get(0);
@@ -355,6 +347,7 @@ public class Simulator
 
                 String pr = "";
                 int pro = 0;
+                int pick = 0;
 
                 for(int i=0; i<procCount; i++) {
                     proc = (SimulatorPDUProcessor)processors.get(i);
@@ -363,6 +356,7 @@ public class Simulator
                             if (proc.isActive()) {
                                 pr += i+",";
                                 pro++;
+                                pick = i;
                             } else {
                                 ret = "This session is inactive.";
                             }
@@ -371,12 +365,10 @@ public class Simulator
                         }
                     }
                 }
-                
+                /*
                 if(pr.length()>0) {
                     pr = pr.substring(0, pr.length()-1);
                 }
-
-                //System.out.println("Active proc : "+pr);
 
                 String[] prx = pr.split(",");
                 int pick = 0;
@@ -386,10 +378,6 @@ public class Simulator
                     if(pick>0)
                         pick--;
                 }
-                /*else {
-                    pick = Integer.parseInt(prx[0]);
-                }
-                 * 
                  */
                 System.out.println("Sending to proc :"+pick);
 
@@ -401,11 +389,9 @@ public class Simulator
                     request.setDestAddr(shortCode);
                     System.out.println("encoding "+encoding);
                     if(!encoding.equalsIgnoreCase("ascii")) {
-                        //System.out.println("Sending "+msg+" with ENC_UTF16_BE");
                         request.setDataCoding((byte)0x08);
                         msg = msg.replaceAll("%", "");
                         request.setShortMessage(Hex.decodeHexString(msg),Data.ENC_UTF16_BE);
-                        //System.out.println("Sending "+msg+" with ENC_UTF16_BEx");
                     } else {
                         request.setShortMessage(msg);
                     }
