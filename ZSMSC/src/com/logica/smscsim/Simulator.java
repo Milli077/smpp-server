@@ -335,78 +335,45 @@ public class Simulator
         if (smscListener != null) {
             int procCount = processors.count();
             if (procCount > 0) {
-                String client;
                 SimulatorPDUProcessor proc;
                 listClients();
-                if (procCount > 1) {
-                    client = toSMPP;
-                } else {
-                    proc = (SimulatorPDUProcessor)processors.get(0);
-                    client = proc.getSystemId();
-                }
-
-                String pr = "";
-                int pro = 0;
-                int pick = 0;
-
+                boolean queue = true;
                 for(int i=0; i<procCount; i++) {
+                    if(queue) {
                     proc = (SimulatorPDUProcessor)processors.get(i);
                     if(proc!=null) {
-                        if (proc.getSystemId().equals(client)) {
                             if (proc.isActive()) {
-                                pr += i+",";
-                                pro++;
-                                pick = i;
-                            } else {
+                                System.out.println("Sending to proc :"+i);
+                                proc = (SimulatorPDUProcessor)processors.get(i);
+                                DeliverSM request = new DeliverSM();
+                                try {
+                                    request.setSourceAddr(msisdn);
+                                    request.setDestAddr(shortCode);
+                                    System.out.println("encoding "+encoding);
+                                    if(!encoding.equalsIgnoreCase("ascii")) {
+                                        request.setDataCoding((byte)0x08);
+                                        msg = msg.replaceAll("%", "");
+                                        request.setShortMessage(Hex.decodeHexString(msg),Data.ENC_UTF16_BE);
+                                    } else {
+                                        request.setShortMessage(msg);
+                                    }
+                                    proc.serverRequest(request);
+                                    ret = "Message sent to proc num "+i;
+                                    System.out.println("Message sent to proc "+i);
+                                    queue = false;
+                                } catch (WrongLengthOfStringException e) {
+                                    System.out.println("Message sending failed");
+                                    event.write(e, "");
+                                    ret = "Message sending failed";
+                                } catch(Exception e) {
+                                    e.printStackTrace();
+                                }
+                          } else {
                                 ret = "This session is inactive.";
-                            }
-                        } else {
-                            ret = "No session";
-                        }
+                          }
+                    }
                     }
                 }
-                /*
-                if(pr.length()>0) {
-                    pr = pr.substring(0, pr.length()-1);
-                }
-
-                String[] prx = pr.split(",");
-                int pick = 0;
-                if(prx.length>1) {
-                    Random random = new Random();
-                    pick = random.nextInt(prx.length);
-                    if(pick>0)
-                        pick--;
-                }
-                 */
-                System.out.println("Sending to proc :"+pick);
-
-                proc = (SimulatorPDUProcessor)processors.get(pick);
-
-                DeliverSM request = new DeliverSM();
-                try {
-                    request.setSourceAddr(msisdn);
-                    request.setDestAddr(shortCode);
-                    System.out.println("encoding "+encoding);
-                    if(!encoding.equalsIgnoreCase("ascii")) {
-                        request.setDataCoding((byte)0x08);
-                        msg = msg.replaceAll("%", "");
-                        request.setShortMessage(Hex.decodeHexString(msg),Data.ENC_UTF16_BE);
-                    } else {
-                        request.setShortMessage(msg);
-                    }
-                    
-                    proc.serverRequest(request);
-                    ret = "Message sent to proc num "+pick;
-                    System.out.println("Message sent to proc "+pick);
-                } catch (WrongLengthOfStringException e) {
-                    System.out.println("Message sending failed");
-                    event.write(e, "");
-                    ret = "Message sending failed";
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-
             } else {
                 ret = "No client connected.";
             }
